@@ -1,0 +1,202 @@
+version: "3.3"
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./radarr/config:/config
+      - ${MOVIES_PATH}:/movies
+      - ${DOWNLOADS_PATH}:/downloads
+    ports:
+      - ${RADARR_PORT}:7878
+    healthcheck:
+	    test: ["CMD-SHELL", "curl -f http://localhost:${RADARR_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./sonarr/config:/config
+      - ${TV_PATH}:/tv
+      - ${ANIME_PATH}:/anime
+      - ${DOWNLOADS_PATH}:/downloads
+    ports:
+      - ${SONARR_PORT}:8989
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${SONARR_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./prowlarr/config:/config
+    ports:
+      - ${PROWLARR_PORT}:9696
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${PROWLARR_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=info
+    ports:
+      - ${FLARESOLVERR_PORT}:8191
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${FLARESOLVERR_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  readarr-audiobooks:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr-audiobooks
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./readarr-audiobooks/config:/config
+      - ${AUDIOBOOKS_PATH}:/audiobooks
+      - ${DOWNLOADS_PATH}:/downloads
+    ports:
+      - ${READARR_AUDIOBOOKS_PORT}:8787
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${READARR_AUDIOBOOKS_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  readarr-ebooks:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr-ebooks
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./readarr-ebooks/config:/config
+      - ${BOOKS_PATH}:/audiobooks
+      - ${DOWNLOADS_PATH}:/downloads
+    ports:
+      - ${READARR_EBOOKS_PORT}:8787
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${READARR_EBOOKS_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./bazarr/config:/config
+      - ${MOVIES_PATH}:/movies
+      - ${TV_PATH}:/tv
+      - ${ANIME_PATH}:/anime
+    ports:
+      - ${BAZARR_PORT}:6767
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${BAZARR_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  qbittorrent:
+    image: qbittorrentofficial/qbittorrent-nox:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - QBT_EULA=accept
+      - QBT_VERSION=latest
+      - QBT_WEBUI_PORT=${QBITTORRENT_PORT}
+      - TZ=${TIMEZONE}
+    ports:
+      - 6881:6881/tcp
+      - 6881:6881/udp
+      - ${QBITTORRENT_PORT}:8080/tcp
+    read_only: true
+    stop_grace_period: 30m
+    tmpfs:
+      - /tmp
+    tty: true
+    volumes:
+      - ./qbittorrent/config:/config
+      - ${DOWNLOAD_PATH}:/downloads
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${QBITTORRENT_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./sabnzbd/config:/config
+      - ${DOWNLOADS_PATH}/Usenet/complete:/downloads
+      - ${DOWNLOADS_PATH}/Usenet/temp:/incomplete-downloads
+    ports:
+      - ${SABNZBD_PORT}:8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${SABNZBD_PORT} || exit 1"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - 8000:8000
+      - 9443:9443
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --schedule "0 5 * * *"
+volumes:
+  portainer_data:
