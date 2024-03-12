@@ -168,7 +168,7 @@ services:
     tty: true
     volumes:
       - ./qbittorrent/config:/config
-      - ${DOWNLOAD_PATH}:/downloads
+      - ${DOWNLOADS_PATH}:/downloads
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:${QBITTORRENT_PORT} || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
