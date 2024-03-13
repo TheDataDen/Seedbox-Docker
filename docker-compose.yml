@@ -144,10 +144,6 @@ services:
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=${QBITTORRENT_PORT}
       - TZ=${TIMEZONE}
-    ports:
-      - 6881:6881/tcp
-      - 6881:6881/udp
-      - ${QBITTORRENT_PORT}:8080/tcp
     read_only: true
     stop_grace_period: 30m
     tmpfs:
