@@ -20,8 +20,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -43,8 +41,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -63,8 +59,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -79,8 +73,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   readarr-audiobooks:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-audiobooks
@@ -101,8 +93,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   readarr-ebooks:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-ebooks
@@ -123,8 +113,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
@@ -146,11 +134,10 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   qbittorrent:
     image: qbittorrentofficial/qbittorrent-nox:latest
     container_name: qbittorrent
+    network_mode: host
     restart: unless-stopped
     environment:
       - QBT_EULA=accept
@@ -175,8 +162,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
@@ -197,8 +182,6 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
-    networks:
-      - vpn_network
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -209,8 +192,6 @@ services:
     ports:
       - 8000:8000
       - 9443:9443
-    networks:
-      - vpn_network
   watchtower:
     image: containrrr/watchtower:latest
     container_name: watchtower
@@ -218,11 +199,5 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --schedule "0 5 * * *"
-    networks:
-      - vpn_network
 volumes:
   portainer_data:
-networks:
-  vpn_network:
-    external: true
-    name: ${VPN_NETWORK_INTERFACE}
