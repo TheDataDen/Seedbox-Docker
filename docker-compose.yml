@@ -244,12 +244,6 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f https://localhost:8384 || exit 1"]
-      interval: ${HEALTH_CHECK_INTERVAL}
-      timeout: ${HEALTH_CHECK_TIMEOUT}
-      retries: ${HEALTH_CHECK_RETRIES}
-      start_period: ${HEALTH_CHECK_START_PERIOD}
       
 volumes:
   portainer_data:
