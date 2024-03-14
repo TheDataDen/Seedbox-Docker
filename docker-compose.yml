@@ -235,7 +235,7 @@ services:
   syncthing:
     image: syncthing/syncthing:latest
     container_name: syncthing
-    restart: unless-stoppped
+    restart: unless-stopped
     ports:
       - 8384:8384
       - 22000:22000/tcp
