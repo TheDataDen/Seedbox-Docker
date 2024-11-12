@@ -160,10 +160,9 @@ services:
   qbittorrent:
     image: qbittorrentofficial/qbittorrent-nox:latest
     container_name: qbittorrent
-    network_mode: host
     restart: unless-stopped
     environment:
-      - QBT_EULA=accept
+      - QBT_LEGAL_NOTICE=accept
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=${QBITTORRENT_PORT}
       - TZ=${TIMEZONE}
