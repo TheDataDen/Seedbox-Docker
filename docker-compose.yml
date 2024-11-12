@@ -167,6 +167,8 @@ services:
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=${QBITTORRENT_PORT}
       - TZ=${TIMEZONE}
+    ports:
+      - ${QBITTORRENT_PORT}:8080
     read_only: true
     stop_grace_period: 30m
     tmpfs:
