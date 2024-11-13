@@ -12,6 +12,10 @@ services:
       - ${BAZARR_PORT}:6767
       - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
       - ${SABNZBD_PORT}:8080
+      - ${RADARR_PORT}:7878
+      - ${SONARR_PORT}:8989
+      - ${READARR_AUDIOBOOKS_PORT}:8787
+      - ${READARR_EBOOKS_PORT}:8788
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -42,6 +46,7 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -50,8 +55,6 @@ services:
       - ./radarr/config:/config
       - ${MOVIES_PATH}:/movies
       - ${DOWNLOADS_PATH}:/downloads
-    ports:
-      - ${RADARR_PORT}:7878
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:7878 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -59,6 +62,8 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      vpn:
+        condition: service_healthy
       qbittorrent:
         condition: service_started
       sabnzbd:
@@ -69,6 +74,7 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -78,8 +84,6 @@ services:
       - ${TV_PATH}:/tv
       - ${ANIME_PATH}:/anime
       - ${DOWNLOADS_PATH}:/downloads
-    ports:
-      - ${SONARR_PORT}:8989
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8989 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -87,6 +91,8 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      vpn:
+        condition: service_healthy
       qbittorrent:
         condition: service_started
       sabnzbd:
@@ -135,37 +141,40 @@ services:
     depends_on:
       vpn:
         condition: service_healthy
-  readarr-audiobooks:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr-audiobooks
-    restart: unless-stopped
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
-    volumes:
-      - ./readarr-audiobooks/config:/config
-      - ${AUDIOBOOKS_PATH}:/audiobooks
-      - ${DOWNLOADS_PATH}:/downloads
-    ports:
-      - ${READARR_AUDIOBOOKS_PORT}:8787
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
-      interval: ${HEALTH_CHECK_INTERVAL}
-      timeout: ${HEALTH_CHECK_TIMEOUT}
-      retries: ${HEALTH_CHECK_RETRIES}
-      start_period: ${HEALTH_CHECK_START_PERIOD}
-    depends_on:
-      qbittorrent:
-        condition: service_started
-      sabnzbd:
-        condition: service_started
-      prowlarr:
-        condition: service_started
+  # Commented out until the ebooks version is up and the internal port is changed
+  # readarr-audiobooks:
+  #   image: lscr.io/linuxserver/readarr:develop
+  #   container_name: readarr-audiobooks
+  #   restart: unless-stopped
+  #   network_mode: "service:vpn"
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TIMEZONE}
+  #   volumes:
+  #     - ./readarr-audiobooks/config:/config
+  #     - ${AUDIOBOOKS_PATH}:/audiobooks
+  #     - ${DOWNLOADS_PATH}:/downloads
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
+  #     interval: ${HEALTH_CHECK_INTERVAL}
+  #     timeout: ${HEALTH_CHECK_TIMEOUT}
+  #     retries: ${HEALTH_CHECK_RETRIES}
+  #     start_period: ${HEALTH_CHECK_START_PERIOD}
+  #   depends_on:
+  #     vpn:
+  #       condition: service_healthy
+  #     qbittorrent:
+  #       condition: service_started
+  #     sabnzbd:
+  #       condition: service_started
+  #     prowlarr:
+  #       condition: service_started
   readarr-ebooks:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-ebooks
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -174,8 +183,6 @@ services:
       - ./readarr-ebooks/config:/config
       - ${BOOKS_PATH}:/audiobooks
       - ${DOWNLOADS_PATH}:/downloads
-    ports:
-      - ${READARR_EBOOKS_PORT}:8787
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -183,6 +190,8 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      vpn:
+        condition: service_healthy
       qbittorrent:
         condition: service_started
       sabnzbd:
