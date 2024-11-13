@@ -162,7 +162,7 @@ services:
     container_name: qbittorrent
     restart: unless-stopped
     environment:
-      - QBT_LEGAL_NOTICE=accept
+      - QBT_LEGAL_NOTICE=confirm
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=${QBITTORRENT_PORT}
       - TZ=${TIMEZONE}
