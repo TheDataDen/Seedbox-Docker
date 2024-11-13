@@ -22,7 +22,7 @@ services:
       - USER=${PIA_USERNAME}
       - PASS=${PIA_PASSWORD}
       - PORT_FORWARDING=1
-      - PORT_FILE= /pia-port/port.dat
+      - PORT_FILE=/pia-port/port.dat
       - FIREWALL=1
       # Remove if not using dedicated IP
       - PIA_DIP_TOKEN=${PIA_DIP_TOKEN}
