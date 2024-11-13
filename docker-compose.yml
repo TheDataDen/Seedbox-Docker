@@ -53,8 +53,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./radarr/config:/config
-      - ${MOVIES_PATH}:/movies
-      - ${DOWNLOADS_PATH}:/downloads
+      - /data:/data
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:7878 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -81,9 +80,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./sonarr/config:/config
-      - ${TV_PATH}:/tv
-      - ${ANIME_PATH}:/anime
-      - ${DOWNLOADS_PATH}:/downloads
+      - /data:/data
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8989 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -153,8 +150,7 @@ services:
   #     - TZ=${TIMEZONE}
   #   volumes:
   #     - ./readarr-audiobooks/config:/config
-  #     - ${AUDIOBOOKS_PATH}:/audiobooks
-  #     - ${DOWNLOADS_PATH}:/downloads
+  #     - /data:/data
   #   healthcheck:
   #     test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
   #     interval: ${HEALTH_CHECK_INTERVAL}
@@ -181,8 +177,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./readarr-ebooks/config:/config
-      - ${BOOKS_PATH}:/audiobooks
-      - ${DOWNLOADS_PATH}:/downloads
+      - /data:/data
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -209,9 +204,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./bazarr/config:/config
-      - ${MOVIES_PATH}:/movies
-      - ${TV_PATH}:/tv
-      - ${ANIME_PATH}:/anime
+      - /data:/data
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:6767 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -242,7 +235,7 @@ services:
     tty: true
     volumes:
       - ./qbittorrent/config:/config
-      - ${DOWNLOADS_PATH}:/downloads
+      - /data/Downloads/Torrents:/data/Downloads/Torrents
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:${QBITTORRENT_PORT} || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -276,8 +269,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./sabnzbd/config:/config
-      - ${DOWNLOADS_PATH}/Usenet/complete:/downloads
-      - ${DOWNLOADS_PATH}/Usenet/temp:/incomplete-downloads
+      - /data/Downloads/Usenet:/data/Downloads/Usenet
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
