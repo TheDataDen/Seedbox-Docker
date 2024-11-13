@@ -46,6 +46,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      - pia_vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -72,6 +73,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      - pia_vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -95,6 +97,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      - pia_vpn
       - qbittorrent
       - sabnzbd
       - flaresolverr
@@ -113,6 +116,8 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
+    depends_on:
+      - pia_vpn
   readarr-audiobooks:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-audiobooks
@@ -135,6 +140,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      - pia_vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -160,6 +166,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      - pia_vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -186,6 +193,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
+      - pia_vpn
       - sonarr
       - radarr
   qbittorrent:
@@ -214,6 +222,8 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
+    depends_on:
+      - pia_vpn
   qbittorrent-porthelper:
     image: scotte/qbittorrent-porthelper:latest
     container_name: qbittorrent-porthelper
@@ -247,6 +257,8 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
+    depends_on:
+      - pia_vpn
   tubesync:
     image: ghcr.io/meeb/tubesync:latest
     container_name: tubesync
@@ -261,6 +273,8 @@ services:
       - TZ=${TIMEZONE}
       - PUID=${PUID}
       - PGID=${PGID}
+    depends_on:
+      - pia_vpn
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
