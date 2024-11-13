@@ -14,6 +14,8 @@ services:
       - ${DOWNLOADS_PATH}:/downloads
     ports:
       - ${RADARR_PORT}:7878
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:7878 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -39,6 +41,8 @@ services:
       - ${DOWNLOADS_PATH}:/downloads
     ports:
       - ${SONARR_PORT}:8989
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8989 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -61,6 +65,8 @@ services:
       - ./prowlarr/config:/config
     ports:
       - ${PROWLARR_PORT}:9696
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9696 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -79,6 +85,8 @@ services:
       - LOG_LEVEL=info
     ports:
       - ${FLARESOLVERR_PORT}:8191
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8191 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -99,6 +107,8 @@ services:
       - ${DOWNLOADS_PATH}:/downloads
     ports:
       - ${READARR_AUDIOBOOKS_PORT}:8787
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -123,6 +133,8 @@ services:
       - ${DOWNLOADS_PATH}:/downloads
     ports:
       - ${READARR_EBOOKS_PORT}:8787
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8787 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -147,7 +159,9 @@ services:
       - ${TV_PATH}:/tv
       - ${ANIME_PATH}:/anime
     ports:
-      - ${BAZARR_PORT}:6767
+      - ${BAZARR_PORT}:6767 
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:6767 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -168,6 +182,8 @@ services:
       - TZ=${TIMEZONE}
     ports:
       - ${QBITTORRENT_PORT}:8080
+    networks:
+      - pia_network
     read_only: true
     stop_grace_period: 30m
     tmpfs:
@@ -196,6 +212,8 @@ services:
       - ${DOWNLOADS_PATH}/Usenet/temp:/incomplete-downloads
     ports:
       - ${SABNZBD_PORT}:8080
+    networks:
+      - pia_network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -248,3 +266,12 @@ services:
       
 volumes:
   portainer_data:
+
+networks:
+  pia_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "wgpia0"
+    ipam:
+      config:
+        - subnet: 10.0.0.0/8
