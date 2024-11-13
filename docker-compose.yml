@@ -1,9 +1,32 @@
 version: "3.3"
 services:
+  vpn:
+    image: thrnz/docker-wireguard-pia
+    volumes:
+        - pia-dat:/pia
+        - ./pia/:/pia-shared
+    ports:
+        - 8080:8080
+    cap_add:
+        - NET_ADMIN
+    environment:
+        - LOCAL_NETWORK=${PIA_LOCAL_NETWORK}
+        # Remove if using dedicated IP
+        - LOC=${PIA_SERVER_LOC}
+        - USER=${PIA_USERNAME}
+        - PASS=${PIA_PASSWORD}
+        - PORT_FORWARDING=1
+        - PORT_FILE= /pia-shared/port.dat
+        - FIREWALL=1
+        # Remove if not using dedicated IP
+        - PIA_DIP_TOKEN=${PIA_DIP_TOKEN}
+    sysctls:
+        - net.ipv4.conf.all.src_valid_mark=1
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -28,6 +51,7 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -53,6 +77,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -75,6 +100,7 @@ services:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - LOG_LEVEL=info
     ports:
@@ -89,6 +115,7 @@ services:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-audiobooks
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -113,6 +140,7 @@ services:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-ebooks
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -137,6 +165,7 @@ services:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -147,7 +176,7 @@ services:
       - ${TV_PATH}:/tv
       - ${ANIME_PATH}:/anime
     ports:
-      - ${BAZARR_PORT}:6767
+      - ${BAZARR_PORT}:6767 
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:6767 || exit 1"]
       interval: ${HEALTH_CHECK_INTERVAL}
@@ -161,6 +190,7 @@ services:
     image: qbittorrentofficial/qbittorrent-nox:latest
     container_name: qbittorrent
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - QBT_LEGAL_NOTICE=confirm
       - QBT_VERSION=latest
@@ -182,10 +212,23 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
+  qbittorrent-porthelper:
+    image: scotte/qbittorrent-porthelper:latest
+    container_name: qbittorrent-porthelper
+    restart: unless-stopped
+    environment:
+      - HOST=${QBITTORRENT_HOST}
+      - USERNAME=${QBITTORRENT_USERNAME}
+      - PASSWORD=${QBITTORRENT_PASSWORD}
+    volumes:
+      - ./pia/port.dat:/piashared/port.dat
+    depends_on:
+      - qbittorrent
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
     restart: unless-stopped
+    network_mode: "service:vpn"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -202,6 +245,20 @@ services:
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
+  tubesync:
+    image: ghcr.io/meeb/tubesync:latest
+    container_name: tubesync
+    restart: unless-stopped
+    network_mode: "service:vpn"
+    ports:
+      - ${TUBESYNC_PORT}:4848
+    volumes:
+      - ./tubesync/config:/config
+      - ${YOUTUBE_PATH}:/downloads
+    environment:
+      - TZ=${TIMEZONE}
+      - PUID=${PUID}
+      - PGID=${PGID}
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -248,3 +305,4 @@ services:
       
 volumes:
   portainer_data:
+  pia-dat:
