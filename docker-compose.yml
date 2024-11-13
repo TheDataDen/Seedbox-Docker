@@ -288,6 +288,12 @@ services:
     ports:
       - 8000:8000
       - 9443:9443
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--no-check-certificate", "-q", "https://localhost:9443/api/status"]
+      interval: ${HEALTH_CHECK_INTERVAL}
+      timeout: ${HEALTH_CHECK_TIMEOUT}
+      retries: ${HEALTH_CHECK_RETRIES}
+      start_period: ${HEALTH_CHECK_START_PERIOD}
   watchtower:
     image: containrrr/watchtower:latest
     container_name: watchtower
