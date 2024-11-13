@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - pia-dat:/pia
-      - ./pia/:/pia-shared
+      - ./pia/port.dat:/port.dat
     ports:
       - ${PROWLARR_PORT}:9696
       - ${FLARESOLVERR_PORT}:8191
@@ -22,7 +22,7 @@ services:
       - USER=${PIA_USERNAME}
       - PASS=${PIA_PASSWORD}
       - PORT_FORWARDING=1
-      - PORT_FILE= /pia-shared/port.dat
+      - PORT_FILE= /port.dat
       - FIREWALL=1
       # Remove if not using dedicated IP
       - PIA_DIP_TOKEN=${PIA_DIP_TOKEN}
@@ -252,7 +252,7 @@ services:
       - USERNAME=${QBITTORRENT_USERNAME}
       - PASSWORD=${QBITTORRENT_PASSWORD}
     volumes:
-      - ./pia/port.dat:/piashared/port.dat
+      - ./pia/port.dat:/piashared/port.dat:ro
     depends_on:
       qbittorrent:
         condition: service_healthy
