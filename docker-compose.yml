@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - pia-dat:/pia
-      - ./pia/port.dat:/port.dat
+      - ./pia:/pia-port
     ports:
       - ${PROWLARR_PORT}:9696
       - ${FLARESOLVERR_PORT}:8191
@@ -22,7 +22,7 @@ services:
       - USER=${PIA_USERNAME}
       - PASS=${PIA_PASSWORD}
       - PORT_FORWARDING=1
-      - PORT_FILE= /port.dat
+      - PORT_FILE= /pia-port/port.dat
       - FIREWALL=1
       # Remove if not using dedicated IP
       - PIA_DIP_TOKEN=${PIA_DIP_TOKEN}
