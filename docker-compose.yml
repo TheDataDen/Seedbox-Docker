@@ -252,7 +252,7 @@ services:
       - USERNAME=${QBITTORRENT_USERNAME}
       - PASSWORD=${QBITTORRENT_PASSWORD}
     volumes:
-      - ./pia/port.dat:/piashared/port.dat:ro
+      - ./pia:/piashared:ro
     depends_on:
       qbittorrent:
         condition: service_healthy
