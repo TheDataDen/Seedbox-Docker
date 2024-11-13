@@ -259,22 +259,6 @@ services:
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
       - pia_vpn
-  tubesync:
-    image: ghcr.io/meeb/tubesync:latest
-    container_name: tubesync
-    restart: unless-stopped
-    network_mode: "service:vpn"
-    ports:
-      - ${TUBESYNC_PORT}:4848
-    volumes:
-      - ./tubesync/config:/config
-      - ${YOUTUBE_PATH}:/downloads
-    environment:
-      - TZ=${TIMEZONE}
-      - PUID=${PUID}
-      - PGID=${PGID}
-    depends_on:
-      - pia_vpn
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
