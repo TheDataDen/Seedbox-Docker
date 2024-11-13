@@ -46,7 +46,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -73,7 +73,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -97,7 +97,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
       - qbittorrent
       - sabnzbd
       - flaresolverr
@@ -117,7 +117,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
   readarr-audiobooks:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr-audiobooks
@@ -140,7 +140,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -166,7 +166,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
       - qbittorrent
       - sabnzbd
       - prowlarr
@@ -193,7 +193,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
       - sonarr
       - radarr
   qbittorrent:
@@ -223,7 +223,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
   qbittorrent-porthelper:
     image: scotte/qbittorrent-porthelper:latest
     container_name: qbittorrent-porthelper
@@ -258,7 +258,7 @@ services:
       retries: ${HEALTH_CHECK_RETRIES}
       start_period: ${HEALTH_CHECK_START_PERIOD}
     depends_on:
-      - pia_vpn
+      - vpn
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
