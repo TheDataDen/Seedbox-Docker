@@ -279,7 +279,7 @@ services:
       vpn:
         condition: service_healthy
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:alpine
     container_name: portainer
     restart: unless-stopped
     volumes:
