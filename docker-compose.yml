@@ -289,7 +289,7 @@ services:
       - 8000:8000
       - 9443:9443
     healthcheck:
-      test: ["CMD-SHELL", "curl --insecure -f https://localhost:9443/api/status || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:9443/api/status"]
       interval: ${HEALTH_CHECK_INTERVAL}
       timeout: ${HEALTH_CHECK_TIMEOUT}
       retries: ${HEALTH_CHECK_RETRIES}
